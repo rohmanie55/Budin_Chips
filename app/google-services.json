@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "201001966913",
+    "firebase_url": "https://kbnbudinchips.firebaseio.com",
+    "project_id": "kbnbudinchips",
+    "storage_bucket": "kbnbudinchips.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201001966913:android:d9c6e936bf2ffb21",
+        "android_client_info": {
+          "package_name": "com.mr.rohmani.kbnbudinchips"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201001966913-ajocmuah0p3n3s1if367rc24rhea05ug.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mr.rohmani.kbnbudinchips",
+            "certificate_hash": "cb2403501260f6f64ef6404748b170baac50f403"
+          }
+        },
+        {
+          "client_id": "201001966913-00hpgmm4lrr84ur9ujkks06jfl9acr61.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqXwgprenqtQ4gVlspmLL7hdOfFl8zmlE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201001966913-00hpgmm4lrr84ur9ujkks06jfl9acr61.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
