@@ -11,15 +11,19 @@ public class mProduk {
     String nama_produk;
     Integer berat_produk;
     Integer stok_produk;
+    Integer harga_jual;
+    Integer harga_beli;
 
     public mProduk(){
 
     }
 
-    public mProduk(String nama_produk, Integer berat_produk, Integer stok_produk) {
+    public mProduk(String nama_produk, Integer berat_produk, Integer stok_produk, Integer harga_jual, Integer harga_beli) {
         this.nama_produk = nama_produk;
         this.berat_produk = berat_produk;
         this.stok_produk = stok_produk;
+        this.harga_jual = harga_jual;
+        this.harga_beli = harga_beli;
     }
 
 }

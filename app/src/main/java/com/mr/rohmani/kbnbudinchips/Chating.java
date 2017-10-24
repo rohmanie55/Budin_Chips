@@ -1,4 +1,4 @@
-package com.mr.rohmani.kbnbudinchips.Fragment;
+package com.mr.rohmani.kbnbudinchips;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,14 +12,12 @@ import com.mr.rohmani.kbnbudinchips.R;
  * Created by USER on 22/10/2017.
  */
 
-public class Beranda extends Fragment {
+public class Chating extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle SavedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_beranda, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_chating, container, false);
 
         return rootView;
     }
-
-
 }

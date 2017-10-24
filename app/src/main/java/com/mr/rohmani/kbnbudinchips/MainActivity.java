@@ -10,11 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.mr.rohmani.kbnbudinchips.Fragment.Beranda;
-import com.mr.rohmani.kbnbudinchips.Fragment.Chating;
-import com.mr.rohmani.kbnbudinchips.Fragment.Laporan;
-import com.mr.rohmani.kbnbudinchips.Fragment.Pemesanan;
-
 public class MainActivity extends AppCompatActivity {
 
     private FragmentManager manager;
