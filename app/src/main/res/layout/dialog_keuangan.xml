@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/keterangan_transaksi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPersonName"
+            android:hint="Keterangan" />
+    </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/jumlah_transaksi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number"
+            android:hint="jumlah" />
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tgl"
+        android:textSize="17sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="TGL"/>
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radiogroup"
+        android:orientation="horizontal">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:id="@+id/debit"
+            android:checked="true"
+            android:text="Debit"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/kredit"
+            android:text="Kredit"/>
+    </RadioGroup>
+
+</LinearLayout>

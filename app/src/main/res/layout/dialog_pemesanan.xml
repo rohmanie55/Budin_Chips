@@ -1,6 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    android:foreground="?attr/selectableItemBackground">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_username"
+        android:text="username"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_tgl"
+        android:text="tgl"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_keterangan"
+        android:text="keterangan"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_jumlah"
+        android:text="jumlah"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_harga_beli"
+        android:text="harga"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_satuan"
+        android:text="satuan"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"/>
 
 </LinearLayout>
+    </android.support.v7.widget.CardView>

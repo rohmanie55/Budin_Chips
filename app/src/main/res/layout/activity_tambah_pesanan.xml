@@ -118,10 +118,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="Satuan(g)"
+            android:textSize="15sp"
+            android:textColor="#000"
+            android:paddingRight="5dp"
+            android:gravity="center"/>
         <Spinner
             android:id="@+id/spinersatuan"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
+            android:layout_marginRight="20dp"
             android:layout_height="match_parent">
         </Spinner>
         <android.support.design.widget.TextInputLayout
@@ -138,14 +148,18 @@
                 android:hint="Jumlah Total"/>
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/keterangan"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:focusableInTouchMode="false"
-        android:inputType="textMultiLine" />
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/keterangan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Keterangan"
+            android:focusableInTouchMode="false"
+            android:inputType="textMultiLine" />
+    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:id="@+id/btn_simpan"

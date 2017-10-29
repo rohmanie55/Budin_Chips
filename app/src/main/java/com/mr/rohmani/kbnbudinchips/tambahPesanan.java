@@ -1,10 +1,14 @@
 package com.mr.rohmani.kbnbudinchips;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +16,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,10 +37,12 @@ public class tambahPesanan extends AppCompatActivity {
 
     private EditText edit1, edit2, edit3, edit4, total_jumlah, keterangan;
     private String tbalado="", tbarberque="", tkeju="", toriginal="";
-    private String hasilPesanan;
+    private String hasilPesanan, jum1, jum2,jum3,jum4;
     private Integer jumEdit1=0, jumEdit2=0, jumEdit3=0, jumEdit4=0, satuan;
     private Spinner sp_satuan;
     private DatabaseReference mDatabase;
+    private View focusView = null;
+    private boolean cancel = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +146,7 @@ public class tambahPesanan extends AppCompatActivity {
                 //is chkIos checked?
                 if (((CheckBox) v).isChecked()) {
                     edit1.setFocusableInTouchMode(true);
+                    edit1.setText("");
                     tbalado = "Balado :";
                     showToEditText();
                 }else {
@@ -157,6 +165,7 @@ public class tambahPesanan extends AppCompatActivity {
                 if (((CheckBox) v).isChecked()) {
                     tbarberque = ", BBQ :";
                     edit2.setFocusableInTouchMode(true);
+                    edit2.setText("");
                     showToEditText();
                 }else{
                     tbarberque = "";
@@ -173,6 +182,7 @@ public class tambahPesanan extends AppCompatActivity {
                 if (((CheckBox) v).isChecked()) {
                     tkeju = ", Keju :";
                     edit3.setFocusableInTouchMode(true);
+                    edit3.setText("");
                     showToEditText();
                 }else{
                     tkeju = "";
@@ -190,6 +200,7 @@ public class tambahPesanan extends AppCompatActivity {
                     toriginal = ", Ori :";
                     showToEditText();
                     edit4.setFocusableInTouchMode(true);
+                    edit4.setText("");
                 }else{
                     toriginal = "";
                     showToEditText();
@@ -202,7 +213,20 @@ public class tambahPesanan extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tambahPesanan();
+                if (TextUtils.isEmpty(edit1.getText().toString())){
+                    edit1.setError("Harus di isi!");
+                    edit1.requestFocus();
+                }else if(TextUtils.isEmpty(edit2.getText().toString())){
+                    edit2.setError("Harus di isi!");
+                    edit2.requestFocus();
+                }else if(TextUtils.isEmpty(edit3.getText().toString())){
+                    edit3.setError("Harus di isi!");
+                    edit3.requestFocus();
+                }else if (TextUtils.isEmpty(edit4.getText().toString())) {
+                    edit4.setError("Harus di isi!");
+                    edit4.requestFocus();
+                }else{
+                    tambahPesanan();}
             }
         });
 
@@ -210,18 +234,25 @@ public class tambahPesanan extends AppCompatActivity {
         btnBatal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                new AlertDialog.Builder(tambahPesanan.this)
+                    .setMessage("Batalkan Pesanan?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
             }
         });
         
     }
 
-
     private void showToEditText(){
-        String jum1 = String.valueOf(jumEdit1);
-        String jum2 = String.valueOf(jumEdit2);
-        String jum3 = String.valueOf(jumEdit3);
-        String jum4 = String.valueOf(jumEdit4);
+        jum1 = String.valueOf(jumEdit1);
+        jum2 = String.valueOf(jumEdit2);
+        jum3 = String.valueOf(jumEdit3);
+        jum4 = String.valueOf(jumEdit4);
 
         if (jum1.equalsIgnoreCase("0"))
             jum1 ="";
@@ -247,14 +278,12 @@ public class tambahPesanan extends AppCompatActivity {
 
     private void tambahPesanan(){
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
         final String date = df.format(c.getTime());
         final String pketerangan = keterangan.getText().toString();
         final Integer pjumlah = Integer.parseInt(total_jumlah.getText().toString());
-
-
-        Toast.makeText(tambahPesanan.this, "Posting...", Toast.LENGTH_SHORT).show();
         final String userId = getUid();
+
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -267,7 +296,6 @@ public class tambahPesanan extends AppCompatActivity {
                             Log.e("Error", "User " + userId + " is unexpectedly null");
                             Toast.makeText(tambahPesanan.this, "Error: could not fetch user.", Toast.LENGTH_SHORT).show();
                         } else {
-                            // Write new post
                             simpanPesanan(userId, user.username, date, pketerangan, pjumlah, "Menunggu");
                         }
 
@@ -280,9 +308,10 @@ public class tambahPesanan extends AppCompatActivity {
                 });
     }
 
-    public void simpanPesanan(String uid, String uname, String date, String ket, Integer jum, String status){
-        Integer hjual;
-        Integer hbeli;
+    public void simpanPesanan(final String uid, final String uname, final String date, final String ket,
+                              final Integer jum, final String status){
+        final Integer hjual;
+        final Integer hbeli;
 
         if (satuan==200){
             hbeli = 8000*jum;
@@ -291,15 +320,50 @@ public class tambahPesanan extends AppCompatActivity {
             hbeli = 20000*jum;
             hjual = 25000*jum;
         }
-        String key = mDatabase.child("pemesanan").push().getKey();
-        mPemesanan pesanan = new mPemesanan(uid, date, ket, jum, status, uname, hjual, hbeli, satuan);
-        Map<String, Object> postValues = pesanan.toMap();
 
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/pemesanan/" + key, postValues);
-        childUpdates.put("/pemesanan-data/" +uid+ "/" + key, postValues);
+        LayoutInflater inflater= tambahPesanan.this.getLayoutInflater();
+        View v = inflater.inflate(R.layout.dialog_pemesanan ,null);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(tambahPesanan.this);
+        builder.setTitle("Detail Pesanan")
+                .setView(v);
+        TextView tvUsername = (TextView) v.findViewById(R.id.tv_username);
+        TextView tvTgl = (TextView) v.findViewById(R.id.tv_tgl);
+        TextView tvKeteterangan = (TextView) v.findViewById(R.id.tv_keterangan);
+        TextView tvJumlah = (TextView) v.findViewById(R.id.tv_jumlah);
+        TextView tvHarga = (TextView) v.findViewById(R.id.tv_harga_beli);
+        TextView tvSatuan = (TextView) v.findViewById(R.id.tv_satuan);
 
-        mDatabase.updateChildren(childUpdates);
+        tvUsername.setText("Nama Pemesan: "+uname);
+        tvTgl.setText("Taggal: "+date);
+        tvKeteterangan.setText("Keterangan :"+ket);
+        tvJumlah.setText("Jumlah: "+String.valueOf(jum)+" pcs");
+        tvHarga.setText("Harga: "+String.valueOf(hjual));
+        tvSatuan.setText("Satuan: "+String.valueOf(satuan)+" g");
+
+        builder.setPositiveButton("Lanjutkan", null) //Set to null. We override the onclick
+                .setNegativeButton("Batal", null);
+
+        final AlertDialog d = builder.create();
+        d.show();
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String key = mDatabase.child("pemesanan").push().getKey();
+                mPemesanan pesanan = new mPemesanan(uid, date, ket, jum, status, uname, hjual, hbeli, satuan);
+                Map<String, Object> postValues = pesanan.toMap();
+
+                Map<String, Object> childUpdates = new HashMap<>();
+                childUpdates.put("/pemesanan/" + key, postValues);
+                childUpdates.put("/pemesanan-data/" +uid+ "/" + key, postValues);
+
+                mDatabase.updateChildren(childUpdates);
+                Toast.makeText(tambahPesanan.this, "Berhasil", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
     }
 
 
