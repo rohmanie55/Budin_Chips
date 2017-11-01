@@ -11,12 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".myMessageService">
+        <service android:name=".myMessageService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".myInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".Login"
             android:theme="@style/AppTheme.NoActionBar">
@@ -31,8 +36,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".tambahPesanan"
-            android:label="Tambah Pesanan"></activity>
-        <activity android:name=".tambahLaporan"></activity>
+            android:label="Tambah Pesanan" />
+        <activity android:name=".tambahLaporan" />
     </application>
 
 </manifest>

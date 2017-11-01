@@ -89,9 +89,9 @@ public class Laporan extends Fragment {
                 if (kas == null)
                     Toast.makeText(getActivity(), "Error 404", Toast.LENGTH_SHORT).show();
                 else
-                    tvSaldo.setText(String.valueOf("Saldo"+System.getProperty("line.separator")+"Rp."+kas.saldo));
+                    tvSaldo.setText(String.valueOf("Estimasi Saldo"+System.getProperty("line.separator")+"Rp."+kas.saldo));
                     tvJumlah.setText(String.valueOf("Produk Terjual"+System.getProperty("line.separator")+kas.total)+" pcs");
-                    tvProfit.setText(String.valueOf("Keuntungan"+System.getProperty("line.separator")+"Rp."+kas.profit));
+                    tvProfit.setText(String.valueOf("Estimasi Profit"+System.getProperty("line.separator")+"Rp."+kas.profit));
             }
 
             @Override

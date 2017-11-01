@@ -4,11 +4,13 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.mr.rohmani.kbnbudinchips.Holder.hPemesanan;
 import com.mr.rohmani.kbnbudinchips.Models.mPemesanan;
+
+import java.util.HashMap;
 
 /**
  * Created by USER on 22/10/2017.
@@ -73,7 +77,20 @@ public class Beranda extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        TextView tvStatus = (TextView) v.findViewById(R.id.status);
+                        if (tvStatus.getText().toString().equalsIgnoreCase("Menunggu")){
+                            Snackbar.make(v, "Batalkan Pesanan?", Snackbar.LENGTH_LONG)
+                                    .setAction("Batalkan", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            HashMap<String, Object> result = new HashMap<>();
+                                            result.put("status", "Dibatalkan");
 
+                                            mDatabase.child("pemesanan").child(postKey).updateChildren(result);
+                                            mDatabase.child("pemesanan-data").child(getUid()).child(postKey).updateChildren(result);
+                                        }
+                                    }).show();
+                        }
                     }
                 });
 

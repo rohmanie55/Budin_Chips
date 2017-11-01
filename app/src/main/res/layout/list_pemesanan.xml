@@ -32,34 +32,45 @@
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:layout_weight="4">
-        <TextView
-            android:id="@+id/keterangan"
-            android:layout_width="match_parent"
-            android:text="Keterangan"
-            android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-        <TextView
-            android:id="@+id/harga"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="harga"
-            android:textSize="17sp"
-            android:layout_below="@+id/keterangan"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-        <TextView
-            android:id="@+id/tgl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:text="tgl"
-            android:textSize="15sp"
-            android:layout_below="@+id/harga"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/keterangan"
+                android:layout_width="match_parent"
+                android:text="Keterangan"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/harga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="harga"
+                android:textSize="17sp"
+                android:layout_below="@+id/keterangan"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/tgl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="tgl"
+                android:textSize="15sp"
+                android:layout_below="@+id/harga"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/uid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:text="tgl"
+                android:textSize="15sp"
+                android:visibility="invisible"
+                android:layout_below="@+id/tgl"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
         <LinearLayout
             android:layout_width="0dp"
@@ -67,27 +78,27 @@
             android:layout_height="match_parent"
             android:layout_weight="1.5">
 
-        <TextView
-            android:id="@+id/jumlah_pesanan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Jumlah"
-            android:layout_marginBottom="5dp"
-            android:textSize="17sp" />
-        <TextView
-            android:id="@+id/satuan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="satuan"
-            android:layout_marginBottom="5dp"
-            android:textSize="14sp"/>
-        <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status"
-            android:layout_marginBottom="5dp"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/jumlah_pesanan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jumlah"
+                android:layout_marginBottom="5dp"
+                android:textSize="17sp" />
+            <TextView
+                android:id="@+id/satuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="satuan"
+                android:layout_marginBottom="5dp"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:layout_marginBottom="5dp"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>

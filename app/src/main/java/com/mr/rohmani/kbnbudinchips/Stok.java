@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -32,6 +32,7 @@ public class Stok extends Fragment {
     // [END declare_database_ref]
     private LinearLayoutManager mManager;
     private String postKey;
+    private String mStatus;
 
     private FirebaseRecyclerAdapter<mPemesanan, hPemesanan> mAdapter;
 
@@ -41,6 +42,32 @@ public class Stok extends Fragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycle_stock);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mStatus = "Dikonfirmasi";
+
+        Button tunggu = (Button) rootView.findViewById(R.id.btnTunggu);
+        Button konfir = (Button) rootView.findViewById(R.id.btnKonfir);
+        tunggu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStatus = "Dikonfirmasi";
+                mAdapter.cleanup();
+                Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Menunggu");
+                RefreshRecycleView(postsQuery);
+                recyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+        konfir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mStatus = "Diterima";
+                mAdapter.cleanup();
+                Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Dikonfirmasi");
+                RefreshRecycleView(postsQuery);
+                recyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
 
         return rootView;
     }
@@ -57,46 +84,12 @@ public class Stok extends Fragment {
 
         Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Menunggu");
 
-        mAdapter = new FirebaseRecyclerAdapter<mPemesanan, hPemesanan>(mPemesanan.class, R.layout.list_pemesanan,
-                hPemesanan.class, postsQuery) {
-            @Override
-            protected void populateViewHolder(final hPemesanan viewHolder, final mPemesanan model, final int position) {
-                final DatabaseReference postRef = getRef(position);
-
-                // Set click listener for the whole post view
-                final String mPostKey = postRef.getKey();
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TextView tvKeterangan = (TextView) v.findViewById(R.id.keterangan);
-                        TextView tvHarga = (TextView) v.findViewById(R.id.harga);
-                        TextView tvTgl = (TextView) v.findViewById(R.id.tgl);
-                        TextView tvJumlah = (TextView) v.findViewById(R.id.jumlah_pesanan);
-                        TextView tvSatuan = (TextView) v.findViewById(R.id.satuan);
-                        TextView tvStatus = (TextView) v.findViewById(R.id.status);
-
-                        String ket, hrg, tgl, jum, sat, status;
-                        ket = tvKeterangan.getText().toString();
-                        hrg = tvHarga.getText().toString();
-                        tgl = tvTgl.getText().toString();
-                        jum = tvJumlah.getText().toString();
-                        sat = tvSatuan.getText().toString();
-                        status = tvStatus.getText().toString();
-
-                        showDialog(ket, tgl, jum, hrg, sat, status, mPostKey);
-
-                    }
-                });
-
-                viewHolder.bindToPostStock(model, position + 1);
-
-            }
-        };
+        RefreshRecycleView(postsQuery);
 
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void showDialog(String ket, String tgl, String jum, String hrg, String sat, String status, final String key) {
+    private void showDialog(final String uid, String ket, String tgl, String jum, String hrg, String sat, String status, final String key) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_pemesanan, null);
         String mtgl = "", user ="";
@@ -117,13 +110,13 @@ public class Stok extends Fragment {
 
         tvUsername.setText("Pemesan: " + user);
         tvTgl.setText("Tanggal: " + mtgl);
-        tvKeteterangan.setText("Keterangan: " + ket);
+        tvKeteterangan.setText("Keterangan: " +System.getProperty("line.separator")+ ket);
         tvJumlah.setText("Jumlah: " + jum + " (" + sat + ")");
         tvHarga.setText("Harga: " + hrg);
         tvSatuan.setText("Status: " + status);
 
-        builder.setPositiveButton("Konfirmasi", null) //Set to null. We override the onclick
-                .setNegativeButton("Tolak", null);
+        builder.setPositiveButton(mStatus.substring(2), null) //Set to null. We override the onclick
+                .setNegativeButton("Batal", null);
 
         final AlertDialog d = builder.create();
         d.show();
@@ -131,18 +124,55 @@ public class Stok extends Fragment {
             @Override
             public void onClick(View v) {
                 HashMap<String, Object> result = new HashMap<>();
-                result.put("status", "Dikonfirmasi");
+                result.put("status", mStatus);
 
                 mDatabase.child("pemesanan").child(key).updateChildren(result);
-                mDatabase.child("pemesanan-data").child(getUid()).child(key).updateChildren(result);
-                Toast.makeText(getActivity(), "Berhasil dikonfirmasi", Toast.LENGTH_SHORT).show();
+                mDatabase.child("pemesanan-data").child(uid).child(key).updateChildren(result);
+                Toast.makeText(getActivity(), "Berhasil "+mStatus, Toast.LENGTH_SHORT).show();
                 d.dismiss();
             }
         });
 
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private void RefreshRecycleView(Query postsQuery){
+        mAdapter = new FirebaseRecyclerAdapter<mPemesanan, hPemesanan>(mPemesanan.class, R.layout.list_pemesanan,
+                hPemesanan.class, postsQuery) {
+            @Override
+            protected void populateViewHolder(final hPemesanan viewHolder, final mPemesanan model, final int position) {
+                final DatabaseReference postRef = getRef(position);
+
+                // Set click listener for the whole post view
+                final String mPostKey = postRef.getKey();
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView tvKeterangan = (TextView) v.findViewById(R.id.keterangan);
+                        TextView tvHarga = (TextView) v.findViewById(R.id.harga);
+                        TextView tvTgl = (TextView) v.findViewById(R.id.tgl);
+                        TextView tvJumlah = (TextView) v.findViewById(R.id.jumlah_pesanan);
+                        TextView tvSatuan = (TextView) v.findViewById(R.id.satuan);
+                        TextView tvStatus = (TextView) v.findViewById(R.id.status);
+                        TextView tvUid = (TextView) v.findViewById(R.id.uid);
+
+                        String ket, hrg, tgl, jum, sat, status, uid;
+                        ket = tvKeterangan.getText().toString();
+                        hrg = tvHarga.getText().toString();
+                        tgl = tvTgl.getText().toString();
+                        jum = tvJumlah.getText().toString();
+                        sat = tvSatuan.getText().toString();
+                        status = tvStatus.getText().toString();
+                        uid = tvUid.getText().toString();
+
+                        showDialog(uid, ket, tgl, jum, hrg, sat, status, mPostKey);
+
+                    }
+                });
+
+                viewHolder.bindToPostStock(model, position + 1);
+
+            }
+        };
     }
+
 }

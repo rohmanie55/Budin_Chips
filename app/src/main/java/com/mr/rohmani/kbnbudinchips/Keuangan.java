@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,7 +76,7 @@ public class Keuangan extends Fragment {
 
         recyclerView.setLayoutManager(mManager);
 
-        Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Dikonfirmasi");
+        Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Diterima");
 
         mAdapter = new FirebaseRecyclerAdapter<mPemesanan, hPemesanan>(mPemesanan.class, R.layout.list_pemesanan,
                 hPemesanan.class, postsQuery) {
@@ -96,16 +95,18 @@ public class Keuangan extends Fragment {
                         TextView tvJumlah = (TextView) v.findViewById(R.id.jumlah_pesanan);
                         TextView tvSatuan = (TextView) v.findViewById(R.id.satuan);
                         TextView tvStatus = (TextView) v.findViewById(R.id.status);
+                        TextView tvUid = (TextView) v.findViewById(R.id.uid);
 
-                        String ket, hrg, tgl, jum, sat, status;
+                        String ket, hrg, tgl, jum, sat, status, uid;
                         ket = tvKeterangan.getText().toString();
                         hrg = tvHarga.getText().toString();
                         tgl = tvTgl.getText().toString();
                         jum = tvJumlah.getText().toString();
                         sat = tvSatuan.getText().toString();
                         status = tvStatus.getText().toString();
+                        uid = tvUid.getText().toString();
 
-                        showDialog(ket, tgl, jum, hrg, sat, status, postKey);
+                        showDialog(uid, ket, tgl, jum, hrg, sat, status, postKey);
 
                     }
                 });
@@ -118,7 +119,7 @@ public class Keuangan extends Fragment {
         recyclerView.setAdapter(mAdapter);
     }
 
-    private void showDialog(String ket, String tgl, final String jum, String hrg, String sat, String status, final String key) {
+    private void showDialog(final String uid, String ket, String tgl, final String jum, String hrg, String sat, String status, final String key) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View v = inflater.inflate(R.layout.dialog_pemesanan, null);
         final String mtgl, user, jual, beli, jumlah;
@@ -161,7 +162,7 @@ public class Keuangan extends Fragment {
                 result.put("status", "Selesai");
 
                 mDatabase.child("pemesanan").child(key).updateChildren(result);
-                mDatabase.child("pemesanan-data").child(getUid()).child(key).updateChildren(result);
+                mDatabase.child("pemesanan-data").child(uid).child(key).updateChildren(result);
                 updateLaporan(mtgl, user, untung);
                 updateSaldo(untung, Integer.parseInt(jumlah));
                 Toast.makeText(getActivity(), "Berhasil diselesaikan", Toast.LENGTH_SHORT).show();
@@ -171,9 +172,7 @@ public class Keuangan extends Fragment {
 
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
+
 
     private void updateSaldo(final Integer untung, final Integer total){
         DatabaseReference postRef;
@@ -207,7 +206,7 @@ public class Keuangan extends Fragment {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
         final String date = df.format(c.getTime());
         String key = mDatabase.child("laporan/transaksi").push().getKey();
-        mLaporan laporan = new mLaporan("Penjualan Tgl:"+tgl+"By:"+user, jum, date, "Debit");
+        mLaporan laporan = new mLaporan("Penjualan "+tgl+"By:"+user, jum, date, "Debit");
         Map<String, Object> postValues = laporan.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
