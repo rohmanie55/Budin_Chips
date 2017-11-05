@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KBN Budin Chips</string>
     <string name="title_activity_main">Main</string>
-    <string name="title_home">Beranda</string>
+    <string name="title_home">Dashboard</string>
     <string name="title_stock">Stok</string>
     <string name="title_money">Keuangan</string>
     <string name="title_pemesanan">Pemesanan</string>

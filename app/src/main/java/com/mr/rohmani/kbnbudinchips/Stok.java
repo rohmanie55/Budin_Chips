@@ -60,7 +60,7 @@ public class Stok extends Fragment {
         konfir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mStatus = "Diterima";
+                mStatus = "Tersedia";
                 mAdapter.cleanup();
                 Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Dikonfirmasi");
                 RefreshRecycleView(postsQuery);
@@ -115,8 +115,11 @@ public class Stok extends Fragment {
         tvHarga.setText("Harga: " + hrg);
         tvSatuan.setText("Status: " + status);
 
-        builder.setPositiveButton(mStatus.substring(2), null) //Set to null. We override the onclick
+        builder.setPositiveButton("Konfirmasi", null) //Set to null. We override the onclick
                 .setNegativeButton("Batal", null);
+        if (mStatus.equalsIgnoreCase("Tersedia")){
+            builder.setPositiveButton("Tersedia", null); //Set to null. We override the onclick
+        }
 
         final AlertDialog d = builder.create();
         d.show();

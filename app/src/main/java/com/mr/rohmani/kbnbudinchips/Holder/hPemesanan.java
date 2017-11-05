@@ -72,7 +72,7 @@ public class hPemesanan extends RecyclerView.ViewHolder{
                 tv1.setBackgroundResource(R.color.colorCyan);
             else if (status.equalsIgnoreCase("Dibatalkan"))
                 tv1.setBackgroundResource(R.color.colorRed);
-            else if (status.equalsIgnoreCase("Diterima"))
+            else if (status.equalsIgnoreCase("Tersedia"))
                 tv1.setBackgroundResource(R.color.colorGreen2);
             else
                 tv1.setBackgroundResource(R.color.colorPrimary);

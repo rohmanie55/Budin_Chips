@@ -76,7 +76,7 @@ public class Keuangan extends Fragment {
 
         recyclerView.setLayoutManager(mManager);
 
-        Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Diterima");
+        Query postsQuery = mDatabase.child("pemesanan").orderByChild("status").equalTo("Tersedia");
 
         mAdapter = new FirebaseRecyclerAdapter<mPemesanan, hPemesanan>(mPemesanan.class, R.layout.list_pemesanan,
                 hPemesanan.class, postsQuery) {
