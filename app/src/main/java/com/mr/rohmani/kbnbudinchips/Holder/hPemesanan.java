@@ -29,7 +29,6 @@ public class hPemesanan extends RecyclerView.ViewHolder{
     }
 
     public void bindToPost(mPemesanan models, int position) {
-
         tv1.setText(String.valueOf(position));
         tv2.setText(models.keterangan);
         tv3.setText(String.valueOf(models.jml_pesanan)+" pcs");
@@ -63,13 +62,13 @@ public class hPemesanan extends RecyclerView.ViewHolder{
         tv8.setText(models.Uid);
         aturWarna(models.status);
     }
-
+    //setup color
     public void aturWarna(String status){
         if (status != null) {
             if (status.equalsIgnoreCase("Dikonfirmasi"))
                 tv1.setBackgroundResource(R.color.colorGreen);
             else if (status.equalsIgnoreCase("Selesai"))
-                tv1.setBackgroundResource(R.color.colorCyan);
+                tv1.setBackgroundResource(R.color.colorGrayDark);
             else if (status.equalsIgnoreCase("Dibatalkan"))
                 tv1.setBackgroundResource(R.color.colorRed);
             else if (status.equalsIgnoreCase("Tersedia"))

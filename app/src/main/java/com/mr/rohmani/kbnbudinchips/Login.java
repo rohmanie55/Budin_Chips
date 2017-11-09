@@ -17,8 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mr.rohmani.kbnbudinchips.Models.User;
 
 public class Login extends AppCompatActivity {
@@ -26,8 +29,6 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference mDatabase;
     private ProgressDialog mProgressDialog;
-
-
     private EditText email_text;
     private EditText password_text;
 
@@ -36,22 +37,21 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        //Get Auth Instance
         auth = FirebaseAuth.getInstance();
-
         //Get database Refrence
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         email_text = (EditText) findViewById(R.id.email);
         password_text = (EditText) findViewById(R.id.password);
 
+        //if user alredy autenticated just go to main activity
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(Login.this, MainActivity.class));
             finish();
         }
 
         Button btn_masuk = (Button) findViewById(R.id.btn_masuk);
-
         btn_masuk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +60,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    //vaidasi form login
+    //vaidate login form
     private boolean validateForm() {
         boolean result = true;
         if (TextUtils.isEmpty(email_text.getText().toString())) {
@@ -80,7 +80,7 @@ public class Login extends AppCompatActivity {
         return result;
     }
 
-    //nntuk mengambil username dari email
+    //get username from current email
     private String usernameFromEmail(String email) {
         if (email.contains("@")) {
             return email.split("@")[0];
@@ -88,7 +88,7 @@ public class Login extends AppCompatActivity {
             return email;
         }
     }
-
+    //show progres dialog when btn login clicked
     public void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
@@ -98,7 +98,7 @@ public class Login extends AppCompatActivity {
 
         mProgressDialog.show();
     }
-
+    //hidding progress dialog
     public void hideProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
@@ -106,7 +106,7 @@ public class Login extends AppCompatActivity {
     }
 
 
-    //fngsi yang menjalankan login
+    //login function autenticating user
     private void signIn() {
         String email = email_text.getText().toString();
         String password = password_text.getText().toString();
@@ -115,7 +115,7 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        //menampilkn progres dialog
+        //call show progress dialog
         showProgressDialog();
 
         auth.signInWithEmailAndPassword(email, password)
@@ -135,14 +135,28 @@ public class Login extends AppCompatActivity {
     }
 
     //on oath succes write user into firebase param:firebase user id
-    private void onAuthSuccess(FirebaseUser user) {
-        String username = usernameFromEmail(user.getEmail());
-        String email = user.getEmail();
-        //deklarasi user model yang menampung sema variable
-        User userModel = new User(username, email);
+    private void onAuthSuccess(final FirebaseUser user) {
+        final String username = usernameFromEmail(user.getEmail());
+        final String email = user.getEmail();
 
-        mDatabase.child("users").child(user.getUid()).setValue(userModel);
+        mDatabase.child("users").child(user.getUid()).child("username").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String snap = dataSnapshot.getValue(String.class);
+                        if (snap == null) {
+                            User userModel = new User(username, email);
 
+                            mDatabase.child("users").child(user.getUid()).setValue(userModel);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+        //start main activity
         Intent intent = new Intent(Login.this, MainActivity.class);
         startActivity(intent);
         finish();

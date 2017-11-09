@@ -28,11 +28,9 @@ import com.mr.rohmani.kbnbudinchips.Models.mLaporan;
 public class Laporan extends Fragment {
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
-    // [END declare_database_ref]
     private LinearLayoutManager mManager;
     private ValueEventListener mListener;
     private TextView tvSaldo, tvJumlah, tvProfit;
-
     private FirebaseRecyclerAdapter<mLaporan, hLaporan> mAdapter;
 
     @Override
@@ -51,21 +49,21 @@ public class Laporan extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        //setup layout manager
         mManager = new LinearLayoutManager(getActivity());
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
-
+        //setup recycleview layout to mManager
         recyclerView.setLayoutManager(mManager);
-
+        //prepare query by child laporan/transaksi
+        //show all transaksi
         Query postsQuery = mDatabase.child("laporan").child("transaksi").orderByKey();
-
+        //setup adapter with holder and data model
         mAdapter = new FirebaseRecyclerAdapter<mLaporan, hLaporan>(mLaporan.class, R.layout.list_laporan,
                 hLaporan.class, postsQuery) {
             @Override
             protected void populateViewHolder(final hLaporan viewHolder, final mLaporan model, final int position) {
                 final DatabaseReference postRef = getRef(position);
-
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -74,14 +72,13 @@ public class Laporan extends Fragment {
 
                     }
                 });
-
+                //call function on holder
                 viewHolder.bindToPost(model, position+1);
-
             }
         };
 
-        recyclerView.setAdapter(mAdapter);
-
+        recyclerView.setAdapter(mAdapter);//setup recycleview adapter
+        //value listener for child laporan/saldo
         ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -99,7 +96,7 @@ public class Laporan extends Fragment {
                 // Getting Post failed, log a message
             }
         };
-
+        //set listener
         mDatabase.child("laporan").child("saldo").addValueEventListener(listener);
         mListener=listener;
     }

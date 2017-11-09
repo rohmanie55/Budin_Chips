@@ -26,11 +26,11 @@ public class hLaporan extends RecyclerView.ViewHolder{
         tv1.setText(models.tgl_transaksi.substring(0,2));
         tv2.setText(models.keterangan);
         tv3.setText("Rp."+String.valueOf(models.jumlah));
-        tv4.setText("Tgl:"+models.tgl_transaksi);
+        tv4.setText(models.tgl_transaksi);
         tv5.setText(models.jenis);
         aturWarna(models.jenis);
     }
-
+    //setup color
     public void aturWarna(String status) {
         if (status != null) {
             if (status.equalsIgnoreCase("Debit"))

@@ -19,24 +19,25 @@ public class myMessageService  extends FirebaseMessagingService {
     private static final String TAG = "FirebaseMessagingServce";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             showNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("author"));
         }
-
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
 
         }
     }
-
+    /*
+    * funtion to show notification from firebase clound function
+    * @params String title //title of notification
+    * @params String author //description about username or other
+    * */
     private void showNotification(String title, String author) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
-
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setContentTitle(author)

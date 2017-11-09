@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences settings;
     private DatabaseReference mDatabase;
     private BottomNavigationView navigation;
-
+    //on selected listener for navigation bottom menu item
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -70,19 +68,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         settings = getSharedPreferences("SharedPrefences",MODE_PRIVATE);
         manager = getFragmentManager();
+        //get notification token if exist
         String token = settings.getString("token", "");
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        //set default  selected fragment
         if (savedInstanceState == null) {
             fragment = new Beranda();
             callFragment(fragment);
         }
 
+        //if token is exist store into firebase on child userd/userid
         if (!token.isEmpty()){
             HashMap<String, Object> result = new HashMap<>();
             result.put("NotificationToken", token);
             mDatabase.child("users").child(getUid()).updateChildren(result);
-
+            //than clean token
             SharedPreferences.Editor editor = settings.edit();
             editor.putString("token", "");
             editor.commit();
@@ -93,13 +93,13 @@ public class MainActivity extends AppCompatActivity {
         navigation.findViewById(R.id.nav_keuangan).setVisibility(View.GONE);
         navigation.findViewById(R.id.nav_stok).setVisibility(View.GONE);
 
+        //get user level from database than hiding some navigation bottom menu by user level
         mDatabase.child("users").child(getUid()).child("role").addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String role = dataSnapshot.getValue(String.class);
                         if (role != null) {
-                            Toast.makeText(MainActivity.this, "role="+role, Toast.LENGTH_SHORT).show();
                             if (role.equalsIgnoreCase("stock")){
                                 navigation.findViewById(R.id.nav_stok).setVisibility(View.VISIBLE);
                                 FirebaseMessaging.getInstance().subscribeToTopic("pemesananBaru");}
@@ -110,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
                                 navigation.findViewById(R.id.nav_keuangan).setVisibility(View.VISIBLE);
                                 FirebaseMessaging.getInstance().subscribeToTopic("pemesananBaru");
                             }
-                        } else {
-                            Toast.makeText(MainActivity.this, "Role null", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -121,14 +119,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
+    //just some function to get userid
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
-
+    //funtion to replace current fragment
     private void callFragment(Fragment fragment) {
         transaction = manager.beginTransaction();
-
         transaction.remove(fragment);
         transaction.replace(R.id.main_layout, fragment);
         transaction.commit();

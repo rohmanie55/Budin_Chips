@@ -7,4 +7,7 @@
     <color name="colorCyan">#247684</color>
     <color name="colorRed">#960404</color>
     <color name="colorGreen2">#12ba84</color>
+    <color name="colorGray">#f4f1f1</color>
+    <color name="colorGrayDark">#8ca8ac</color>
+    <color name="colorWhite">#fff</color>
 </resources>
