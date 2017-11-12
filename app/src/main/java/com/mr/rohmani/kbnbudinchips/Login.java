@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mr.rohmani.kbnbudinchips.Models.User;
+import com.mr.rohmani.kbnbudinchips.Models.mKas;
 
 public class Login extends AppCompatActivity {
 
@@ -138,7 +139,7 @@ public class Login extends AppCompatActivity {
     private void onAuthSuccess(final FirebaseUser user) {
         final String username = usernameFromEmail(user.getEmail());
         final String email = user.getEmail();
-
+        //listen value from database if value is null than make new user
         mDatabase.child("users").child(user.getUid()).child("username").addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -156,6 +157,24 @@ public class Login extends AppCompatActivity {
                         Log.w("Error", "getUser:onCancelled", databaseError.toException());
                     }
                 });
+        //listen value from database if value is null han make new laporan
+        mDatabase.child("laporan").child("saldo").addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mKas snap = dataSnapshot.getValue(mKas.class);
+                        if (snap == null) {
+                            mKas saldo = new mKas(0, 0,0);
+                            mDatabase.child("laporan").child("saldo").setValue(saldo);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("Error", "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
         //start main activity
         Intent intent = new Intent(Login.this, MainActivity.class);
         startActivity(intent);
