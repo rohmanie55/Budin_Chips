@@ -17,9 +17,9 @@ https://console.firebase.google.com
 2. create a new firebase function
 3. fill index js with:
 
-
-var functions = require('firebase-functions');
-var admin = require('firebase-admin');
+ ```
+ var functions = require('firebase-functions');
+ var admin = require('firebase-admin');
  
 admin.initializeApp(functions.config().firebase);
 
@@ -85,6 +85,6 @@ exports.sendPemesananUpdate = functions.database.ref('/pemesanan-data/{Uid}/{pem
 	});
 		
 		
-
+ ```
 4. deploy function to firebase
 
